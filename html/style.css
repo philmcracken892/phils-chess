@@ -1,0 +1,1043 @@
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Cinzel:wght@400;700&family=Crimson+Text:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Crimson Text', serif;
+    overflow: hidden;
+}
+
+#chess-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    backdrop-filter: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* Make only the chess wrapper receive pointer events */
+#chess-container > * {
+    pointer-events: auto;
+}
+
+.chess-wrapper {
+    background: 
+        linear-gradient(135deg, rgba(44, 24, 16, 0.85) 0%, rgba(26, 15, 10, 0.90) 100%),
+        repeating-linear-gradient(90deg, rgba(139, 111, 71, 0.05) 0px, transparent 2px, transparent 4px, rgba(139, 111, 71, 0.05) 6px);
+    border: 5px solid rgba(92, 74, 52, 0.9);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 
+        0 0 30px rgba(212, 175, 55, 0.2),
+        inset 0 0 50px rgba(0, 0, 0, 0.3),
+        0 15px 60px rgba(0, 0, 0, 0.6);
+    max-width: 95vw;
+    max-height: 95vh;
+    overflow-y: auto;
+    position: relative;
+    animation: fadeInSlide 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Decorative corner brackets */
+.chess-wrapper::before,
+.chess-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(212, 175, 55, 0.8);
+}
+
+.chess-wrapper::before {
+    top: 10px;
+    left: 10px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.chess-wrapper::after {
+    bottom: 10px;
+    right: 10px;
+    border-left: none;
+    border-top: none;
+}
+
+.chess-header {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #d4af37;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.chess-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #d4af37, transparent);
+}
+
+.chess-header h1 {
+    font-family: 'Rye', serif;
+    font-size: 3em;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(212, 175, 55, 0.5);
+    margin-bottom: 15px;
+    letter-spacing: 3px;
+    color: #f4e4c1;
+    background: linear-gradient(to bottom, #f4e4c1, #d4af37, #b8935f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.player-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 15px;
+    padding: 15px 20px;
+    background: 
+        linear-gradient(135deg, rgba(92, 74, 52, 0.5), rgba(44, 24, 16, 0.7)),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 111, 71, 0.1) 2px, rgba(139, 111, 71, 0.1) 4px);
+    border: 2px solid rgba(92, 74, 52, 0.7);
+    border-radius: 8px;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.5),
+        0 2px 8px rgba(212, 175, 55, 0.2);
+}
+
+.player-turn, .player-color {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3em;
+    color: #f4e4c1;
+    text-shadow: 
+        1px 1px 3px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(0, 0, 0, 0.8);
+    letter-spacing: 1px;
+}
+
+.player-turn span {
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#turn-text {
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.game-container {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.captured-pieces {
+    background: 
+        linear-gradient(135deg, rgba(20, 10, 5, 0.85), rgba(40, 25, 15, 0.90)),
+        repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(139, 111, 71, 0.05) 10px, rgba(139, 111, 71, 0.05) 20px);
+    border: 3px solid rgba(139, 111, 71, 0.8);
+    border-radius: 10px;
+    padding: 20px 15px;
+    min-width: 140px;
+    max-width: 160px;
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.6),
+        0 5px 15px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(212, 175, 55, 0.2);
+    position: relative;
+}
+
+.captured-pieces::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+.captured-pieces h3 {
+    font-family: 'Cinzel', serif;
+    color: #d4af37;
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 
+        1px 1px 2px rgba(0, 0, 0, 0.9),
+        0 0 10px rgba(0, 0, 0, 0.8);
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 8px;
+}
+
+.pieces-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    min-height: 40px;
+}
+
+.captured-piece {
+    font-size: 1.8em;
+    opacity: 0.85;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+.captured-piece:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.board-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background: radial-gradient(circle, rgba(92, 74, 52, 0.4), transparent);
+    border-radius: 15px;
+}
+
+.chess-board {
+    display: grid;
+    grid-template-columns: repeat(8, 75px);
+    grid-template-rows: repeat(8, 75px);
+    border: 6px solid #5c4a34;
+    box-shadow: 
+        0 0 30px rgba(0, 0, 0, 0.8),
+        inset 0 0 20px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(212, 175, 55, 0.3);
+    background: #1a0f0a;
+    border-radius: 4px;
+    position: relative;
+}
+
+/* Wood grain effect on board border */
+.chess-board::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    background: 
+        repeating-linear-gradient(90deg, 
+            #5c4a34 0px, 
+            #6b5742 2px, 
+            #5c4a34 4px
+        );
+    border-radius: 4px;
+    z-index: -1;
+}
+
+.square {
+    width: 75px;
+    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible; /* Changed from hidden to visible for king effects */
+}
+
+/* Leather texture for light squares */
+.square.light {
+    background: 
+        linear-gradient(135deg, rgba(240, 217, 181, 0.1) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(240, 217, 181, 0.1) 25%, transparent 25%),
+        linear-gradient(45deg, rgba(240, 217, 181, 0.1) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(240, 217, 181, 0.1) 25%, transparent 25%);
+    background-color: #e8d4b8;
+    background-size: 4px 4px;
+}
+
+/* Dark wood texture for dark squares */
+.square.dark {
+    background: 
+        linear-gradient(135deg, rgba(0, 0, 0, 0.2) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(0, 0, 0, 0.2) 25%, transparent 25%),
+        linear-gradient(45deg, rgba(0, 0, 0, 0.2) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(0, 0, 0, 0.2) 25%, transparent 25%);
+    background-color: #8b6f47;
+    background-size: 4px 4px;
+}
+
+.square:hover {
+    filter: brightness(1.15);
+    transform: scale(1.02);
+    z-index: 5;
+}
+
+.square.selected {
+    background: radial-gradient(circle, rgba(127, 166, 80, 0.9), rgba(106, 140, 67, 0.95)) !important;
+    box-shadow: 
+        inset 0 0 20px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(127, 166, 80, 0.6);
+    animation: pulseGlow 1.5s infinite;
+}
+
+.square.valid-move {
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.7), rgba(184, 147, 95, 0.8)) !important;
+    box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.square.valid-move::after {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.8), rgba(212, 175, 55, 0.3));
+    border: 3px solid rgba(212, 175, 55, 0.9);
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 
+        0 0 10px rgba(212, 175, 55, 0.6),
+        inset 0 0 8px rgba(0, 0, 0, 0.4);
+    animation: targetPulse 1.2s infinite;
+}
+
+.piece {
+    font-size: 3.5em;
+    user-select: none;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    animation: pieceEntrance 0.3s ease-out;
+}
+
+.square:hover .piece {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+}
+
+.piece.white {
+    color: #f9f6f0;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9));
+}
+
+.piece.black {
+    color: #1a1410;
+    filter: drop-shadow(0 3px 6px rgba(212, 175, 55, 0.4));
+}
+
+.rank-label, .file-label {
+    position: absolute;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75em;
+    font-weight: bold;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.rank-label {
+    top: 3px;
+    left: 5px;
+}
+
+.file-label {
+    bottom: 3px;
+    right: 5px;
+}
+
+.square.light .rank-label,
+.square.light .file-label {
+    color: #8b6f47;
+}
+
+.square.dark .rank-label,
+.square.dark .file-label {
+    color: #e8d4b8;
+}
+
+.chess-controls {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(139, 111, 71, 0.3);
+}
+
+.btn {
+    font-family: 'Cinzel', serif;
+    padding: 15px 40px;
+    font-size: 1.15em;
+    border: 3px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #8b2e1f 0%, #641f14 100%);
+    color: #f4e4c1;
+    border-color: #a33b28;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #a33b28 0%, #8b2e1f 100%);
+    border-color: #d4af37;
+    box-shadow: 
+        0 10px 20px rgba(139, 46, 31, 0.6),
+        0 0 25px rgba(211, 47, 47, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #5c4a34 0%, #3d3022 100%);
+    color: #f4e4c1;
+    border-color: #8b6f47;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #6b5742 0%, #5c4a34 100%);
+    border-color: #d4af37;
+    box-shadow: 
+        0 10px 20px rgba(92, 74, 52, 0.6),
+        0 0 25px rgba(139, 111, 71, 0.4);
+}
+
+/* ========== BASE ANIMATIONS ========== */
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 
+            inset 0 0 20px rgba(0, 0, 0, 0.6),
+            0 0 15px rgba(127, 166, 80, 0.4);
+    }
+    50% {
+        box-shadow: 
+            inset 0 0 25px rgba(0, 0, 0, 0.7),
+            0 0 25px rgba(127, 166, 80, 0.7);
+    }
+}
+
+@keyframes targetPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+@keyframes pieceEntrance {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ========== ULTIMATE KING HIGHLIGHTING ========== */
+
+/* Make kings MUCH larger and bold */
+.piece[class*="king"] {
+    font-size: 5.5em !important;
+    font-weight: 900;
+    position: relative;
+    z-index: 20;
+    animation: kingFloat 3s ease-in-out infinite;
+}
+
+/* White King - INTENSE Golden Royal Effect */
+.piece.white[class*="king"] {
+    color: #fff;
+    text-shadow: 
+        0 0 8px #d4af37,
+        0 0 15px #d4af37,
+        0 0 25px #d4af37,
+        0 0 35px #f4e4c1,
+        0 0 45px #b8935f,
+        3px 3px 10px rgba(0, 0, 0, 1);
+    filter: 
+        drop-shadow(0 0 15px #d4af37) 
+        drop-shadow(0 0 25px #f4e4c1)
+        drop-shadow(0 0 35px #d4af37)
+        drop-shadow(0 5px 15px rgba(0, 0, 0, 0.9));
+    animation: kingGlowWhite 1.5s ease-in-out infinite;
+}
+
+/* Black King - INTENSE Red Royal Effect */
+.piece.black[class*="king"] {
+    color: #000;
+    text-shadow: 
+        0 0 10px #d32f2f,
+        0 0 20px #f44336,
+        0 0 30px #d32f2f,
+        0 0 40px #ff6b6b,
+        3px 3px 8px rgba(212, 175, 55, 0.9);
+    filter: 
+        drop-shadow(0 0 15px #d32f2f) 
+        drop-shadow(0 0 25px #f44336)
+        drop-shadow(0 0 35px #d32f2f)
+        drop-shadow(0 5px 15px rgba(0, 0, 0, 0.9));
+    animation: kingGlowBlack 1.5s ease-in-out infinite;
+}
+
+/* Crown emoji/symbol above king */
+.piece[class*="king"]::before {
+    content: '👑';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%) scale(1.2);
+    font-size: 0.6em;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px #d4af37) drop-shadow(0 0 20px #f4e4c1);
+    animation: crownBounce 2s ease-in-out infinite;
+    z-index: 25;
+}
+
+/* Different crown glow for black king */
+.piece.black[class*="king"]::before {
+    filter: drop-shadow(0 0 10px #d32f2f) drop-shadow(0 0 20px #f44336);
+}
+
+/* King Square - INTENSE Border and Glow */
+.square:has(.piece[class*="king"]) {
+    position: relative;
+    border: 4px solid rgba(212, 175, 55, 1) !important;
+    box-shadow: 
+        inset 0 0 30px rgba(212, 175, 55, 0.6),
+        0 0 30px rgba(212, 175, 55, 1),
+        0 0 50px rgba(212, 175, 55, 0.8),
+        0 0 70px rgba(212, 175, 55, 0.5);
+    animation: kingSquarePulse 2s ease-in-out infinite;
+    z-index: 10;
+    overflow: visible;
+}
+
+/* White king square - golden theme */
+.square:has(.piece.white[class*="king"]) {
+    border-color: rgba(212, 175, 55, 1) !important;
+    box-shadow: 
+        inset 0 0 30px rgba(212, 175, 55, 0.7),
+        0 0 35px rgba(212, 175, 55, 1),
+        0 0 55px rgba(244, 228, 193, 0.9),
+        0 0 75px rgba(212, 175, 55, 0.6);
+}
+
+/* Black king square - red theme */
+.square:has(.piece.black[class*="king"]) {
+    border-color: rgba(211, 47, 47, 1) !important;
+    box-shadow: 
+        inset 0 0 30px rgba(211, 47, 47, 0.7),
+        0 0 35px rgba(211, 47, 47, 1),
+        0 0 55px rgba(244, 67, 54, 0.9),
+        0 0 75px rgba(211, 47, 47, 0.6);
+}
+
+/* Radial glow BEHIND king (larger and brighter) */
+.square:has(.piece[class*="king"])::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(
+        circle,
+        rgba(212, 175, 55, 0.5) 0%,
+        rgba(212, 175, 55, 0.3) 40%,
+        rgba(212, 175, 55, 0.1) 70%,
+        transparent 100%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    animation: kingGlowExpand 2.5s ease-in-out infinite;
+}
+
+/* White king glow - golden */
+.square:has(.piece.white[class*="king"])::before {
+    background: radial-gradient(
+        circle,
+        rgba(212, 175, 55, 0.6) 0%,
+        rgba(244, 228, 193, 0.4) 40%,
+        rgba(212, 175, 55, 0.2) 70%,
+        transparent 100%
+    );
+}
+
+/* Black king glow - red */
+.square:has(.piece.black[class*="king"])::before {
+    background: radial-gradient(
+        circle,
+        rgba(211, 47, 47, 0.6) 0%,
+        rgba(244, 67, 54, 0.4) 40%,
+        rgba(211, 47, 47, 0.2) 70%,
+        transparent 100%
+    );
+}
+
+/* OUTER ring effect around king square */
+.square:has(.piece[class*="king"])::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 3px solid rgba(212, 175, 55, 0.6);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 0;
+    animation: kingOuterRing 2.5s ease-in-out infinite;
+}
+
+/* White king outer ring */
+.square:has(.piece.white[class*="king"])::after {
+    border-color: rgba(212, 175, 55, 0.8);
+    box-shadow: 
+        0 0 15px rgba(212, 175, 55, 0.6),
+        inset 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Black king outer ring */
+.square:has(.piece.black[class*="king"])::after {
+    border-color: rgba(211, 47, 47, 0.8);
+    box-shadow: 
+        0 0 15px rgba(211, 47, 47, 0.6),
+        inset 0 0 15px rgba(211, 47, 47, 0.3);
+}
+
+/* Particle effect - corner sparkles */
+.square:has(.piece[class*="king"]) .rank-label,
+.square:has(.piece[class*="king"]) .file-label {
+    color: #d4af37 !important;
+    text-shadow: 0 0 5px #d4af37, 0 0 10px #f4e4c1;
+    font-weight: 900;
+    animation: labelPulse 1.5s ease-in-out infinite;
+}
+
+/* King hover effect - EXTRA INTENSE */
+.square:has(.piece[class*="king"]):hover {
+    border-width: 5px !important;
+    box-shadow: 
+        inset 0 0 40px rgba(212, 175, 55, 0.8),
+        0 0 40px rgba(212, 175, 55, 1),
+        0 0 60px rgba(244, 228, 193, 1),
+        0 0 90px rgba(212, 175, 55, 0.8) !important;
+    transform: scale(1.05);
+}
+
+.square:hover .piece[class*="king"] {
+    transform: scale(1.2) translateY(-8px);
+    filter: 
+        drop-shadow(0 0 20px #d4af37) 
+        drop-shadow(0 0 35px #f4e4c1)
+        drop-shadow(0 0 50px #d4af37)
+        drop-shadow(0 10px 20px rgba(0, 0, 0, 1));
+}
+
+/* ========== KING ANIMATIONS ========== */
+
+/* King floating animation */
+@keyframes kingFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* White king intense glow pulse */
+@keyframes kingGlowWhite {
+    0%, 100% {
+        filter: 
+            drop-shadow(0 0 15px #d4af37) 
+            drop-shadow(0 0 25px #f4e4c1)
+            drop-shadow(0 0 35px #d4af37);
+    }
+    50% {
+        filter: 
+            drop-shadow(0 0 25px #f4e4c1) 
+            drop-shadow(0 0 40px #d4af37) 
+            drop-shadow(0 0 60px #b8935f)
+            drop-shadow(0 0 80px #d4af37);
+    }
+}
+
+/* Black king intense glow pulse */
+@keyframes kingGlowBlack {
+    0%, 100% {
+        filter: 
+            drop-shadow(0 0 15px #d32f2f) 
+            drop-shadow(0 0 25px #f44336)
+            drop-shadow(0 0 35px #d32f2f);
+    }
+    50% {
+        filter: 
+            drop-shadow(0 0 25px #f44336) 
+            drop-shadow(0 0 40px #d32f2f) 
+            drop-shadow(0 0 60px #ff6b6b)
+            drop-shadow(0 0 80px #d32f2f);
+    }
+}
+
+/* Crown bounce animation */
+@keyframes crownBounce {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0px) scale(1.2);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateX(-50%) translateY(-8px) scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* King square pulse */
+@keyframes kingSquarePulse {
+    0%, 100% {
+        box-shadow: 
+            inset 0 0 25px rgba(212, 175, 55, 0.5),
+            0 0 30px rgba(212, 175, 55, 0.8),
+            0 0 50px rgba(212, 175, 55, 0.6),
+            0 0 70px rgba(212, 175, 55, 0.4);
+    }
+    50% {
+        box-shadow: 
+            inset 0 0 35px rgba(212, 175, 55, 0.7),
+            0 0 40px rgba(212, 175, 55, 1),
+            0 0 65px rgba(212, 175, 55, 0.9),
+            0 0 90px rgba(212, 175, 55, 0.7);
+    }
+}
+
+/* Radial glow expansion */
+@keyframes kingGlowExpand {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* Outer ring pulse */
+@keyframes kingOuterRing {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Label (coordinates) pulse */
+@keyframes labelPulse {
+    0%, 100% {
+        text-shadow: 0 0 5px #d4af37, 0 0 10px #f4e4c1;
+        opacity: 0.8;
+    }
+    50% {
+        text-shadow: 0 0 10px #d4af37, 0 0 20px #f4e4c1, 0 0 30px #d4af37;
+        opacity: 1;
+    }
+}
+
+/* When king is in CHECK - EXTREME WARNING */
+.square.king-in-check {
+    border: 5px solid rgba(255, 0, 0, 1) !important;
+    box-shadow: 
+        inset 0 0 40px rgba(255, 0, 0, 0.8),
+        0 0 50px rgba(255, 0, 0, 1),
+        0 0 80px rgba(255, 0, 0, 0.9),
+        0 0 120px rgba(255, 0, 0, 0.7) !important;
+    animation: checkWarning 0.4s ease-in-out infinite;
+}
+
+.square.king-in-check::before {
+    background: radial-gradient(
+        circle,
+        rgba(255, 0, 0, 0.8) 0%,
+        rgba(255, 0, 0, 0.5) 40%,
+        rgba(255, 0, 0, 0.2) 70%,
+        transparent 100%
+    ) !important;
+}
+
+@keyframes checkWarning {
+    0%, 100% {
+        box-shadow: 
+            inset 0 0 35px rgba(255, 0, 0, 0.7),
+            0 0 40px rgba(255, 0, 0, 0.9),
+            0 0 70px rgba(255, 0, 0, 0.8),
+            0 0 110px rgba(255, 0, 0, 0.6);
+    }
+    50% {
+        box-shadow: 
+            inset 0 0 50px rgba(255, 0, 0, 1),
+            0 0 60px rgba(255, 0, 0, 1),
+            0 0 100px rgba(255, 0, 0, 1),
+            0 0 150px rgba(255, 0, 0, 0.9);
+    }
+}
+
+/* Scrollbar styling */
+.chess-wrapper::-webkit-scrollbar {
+    width: 10px;
+}
+
+.chess-wrapper::-webkit-scrollbar-track {
+    background: rgba(26, 15, 10, 0.5);
+    border-radius: 5px;
+}
+
+.chess-wrapper::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8b6f47, #5c4a34);
+    border-radius: 5px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.chess-wrapper::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #9d7d52, #6b5742);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+@media (max-width: 1400px) {
+    .chess-board {
+        grid-template-columns: repeat(8, 65px);
+        grid-template-rows: repeat(8, 65px);
+    }
+    
+    .square {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .piece {
+        font-size: 3em;
+    }
+    
+    .piece[class*="king"] {
+        font-size: 4.5em !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .chess-header h1 {
+        font-size: 2.5em;
+    }
+    
+    .chess-board {
+        grid-template-columns: repeat(8, 55px);
+        grid-template-rows: repeat(8, 55px);
+    }
+    
+    .square {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .piece {
+        font-size: 2.5em;
+    }
+    
+    .piece[class*="king"] {
+        font-size: 3.8em !important;
+    }
+    
+    .captured-pieces {
+        min-width: 120px;
+        max-width: 130px;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .chess-header h1 {
+        font-size: 2em;
+    }
+    
+    .chess-board {
+        grid-template-columns: repeat(8, 48px);
+        grid-template-rows: repeat(8, 48px);
+    }
+    
+    .square {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .piece {
+        font-size: 2em;
+    }
+    
+    .piece[class*="king"] {
+        font-size: 3em !important;
+    }
+    
+    .captured-pieces {
+        max-width: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .captured-pieces h3 {
+        margin-bottom: 0;
+        border-bottom: none;
+        border-right: 2px solid rgba(212, 175, 55, 0.3);
+        padding-right: 15px;
+        padding-bottom: 0;
+    }
+    
+    .btn {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+    
+    .chess-controls {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chess-wrapper {
+        padding: 15px;
+    }
+    
+    .chess-header h1 {
+        font-size: 1.6em;
+        letter-spacing: 1px;
+    }
+    
+    .player-info {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+    }
+    
+    .chess-board {
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+    }
+    
+    .square {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .piece {
+        font-size: 1.6em;
+    }
+    
+    .piece[class*="king"] {
+        font-size: 2.3em !important;
+    }
+    
+    .square.valid-move::after {
+        width: 18px;
+        height: 18px;
+        border-width: 2px;
+    }
+    
+    .rank-label, .file-label {
+        font-size: 0.6em;
+    }
+    
+    .piece[class*="king"]::before {
+        font-size: 0.5em;
+        top: -20px;
+    }
+}

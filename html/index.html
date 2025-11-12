@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="chess-container" style="display: none;">
+        <div class="chess-wrapper">
+            <div class="chess-header">
+                <h1>Chess Game</h1>
+                <div class="player-info">
+                    <div class="player-turn">
+                        <span id="turn-text">White's Turn</span>
+                    </div>
+                    <div class="player-color">
+                        <span>You are: <strong id="player-color">White</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-container">
+                <div class="captured-pieces captured-top">
+                    <h3>Captured</h3>
+                    <div id="captured-opponent" class="pieces-list"></div>
+                </div>
+
+                <div class="board-wrapper">
+                    <div id="chess-board" class="chess-board"></div>
+                </div>
+
+                <div class="captured-pieces captured-bottom">
+                    <h3>Your Captures</h3>
+                    <div id="captured-player" class="pieces-list"></div>
+                </div>
+            </div>
+
+            <div class="chess-controls">
+                <button id="btn-forfeit" class="btn btn-danger">Forfeit</button>
+                <button id="btn-close" class="btn btn-secondary">Close Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
