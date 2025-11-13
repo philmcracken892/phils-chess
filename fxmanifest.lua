@@ -24,10 +24,13 @@ files {
     'html/index.html',
     'html/style.css',
     'html/script.js'
-    
 }
+
+file 'chess.xml'
+objectloader_map 'chess.xml'
 
 dependencies {
     'rsg-core',
-    'ox_lib'
+    'ox_lib',
+	'objectloader'
 }

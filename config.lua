@@ -18,7 +18,7 @@ Config.ChessLocations = {
     -- Add more locations here
     {
         name = "Saint Denis Chess Club",
-        coords = vector3(2631.42, -1225.26, 53.38),
+        coords = vector3(2628.92, -1223.89, 53.38),
         heading = 180.0,
         blip = {
             sprite = 'blip_mg_dominoes',

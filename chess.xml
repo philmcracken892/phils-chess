@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Map>
+	<MapMeta Creator="**phil-chessboard**"/>
+	<Object Hash="1796540484" Position_x="-243.74226379395" Position_y="771.29998779297" Position_z="117.87000274658" Rotation_x="0.0" Rotation_y="0.0" Rotation_z="21.680830001831" Collision="true" Visible="true"/>
+	<Object Hash="1796540484" Position_x="2628.1340332031" Position_y="-1223.958984375" Position_z="53.177158355713" Rotation_x="0.0" Rotation_y="0.0" Rotation_z="-1.276312828064" Collision="true" Visible="true"/>
+</Map>
